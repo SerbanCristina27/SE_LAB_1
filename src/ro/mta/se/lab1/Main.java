@@ -3,55 +3,95 @@ package ro.mta.se.lab1;
 /**
  * Created by User on 10/17/2016.
  */
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+import java.util.List;
+
+
 public class Main {
+    public static void main(String[] args) {
 
-    public static String[] newString(String str)
-    {
-        String[] parts = str.split(",");
-        return parts;
-    }
+        File file;
+        List<Animal> animal = new ArrayList<>();
+        String nameAnimal;
+        String tip;
+        int c;
+        double f;
+        long sec;
 
-    public static void bubbleSort(int[] intArray) {
+        try {
+            file = new File(args[0]);
+        } catch (Exception e) {
+            System.out.println("Fisier inexistent");
+            return;
+        }
+        if (!file.exists() || !file.canRead()) {
+            System.out.println("Eroare de citire fisier: " + args[0]);
+            return;
+        }
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new FileReader(args[0]));
+            String line;
+            while ((line = in.readLine()) != null) {
+                System.out.println(line);
 
-        int n = intArray.length;
-        int temp;
+                StringTokenizer stringTokenizer = new StringTokenizer(line, ",");
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 1; j < (n - i); j++) {
+                while (stringTokenizer.hasMoreElements()) {
+                    nameAnimal = stringTokenizer.nextToken().trim();
+                    tip = stringTokenizer.nextToken().trim();
 
-                if (intArray[j - 1] > intArray[j]) {
-                    temp = intArray[j - 1];
-                    intArray[j - 1] = intArray[j];
-                    intArray[j] = temp;
+                    try {
+                        c = Integer.parseInt(stringTokenizer.nextToken().trim());
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        throw e;
+                    }
+
+                    try {
+                        f = Double.parseDouble(stringTokenizer.nextToken().trim());
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        throw e;
+                    }
+
+                    try {
+                        sec = Long.parseLong(stringTokenizer.nextToken().trim());
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        throw e;
+                    }
+
+                    animal.add(new Animal(nameAnimal, Animal.TypeAnimal.valueOf(tip), c, f, sec));
+
+
                 }
 
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
-    }
-    public static void printArray(int[] intArray) {
-        for (int i = 0; i < intArray.length; i++)
-            System.out.print(intArray[i] + " ");
-    }
-    public static void main(String args[]) {
-        System.out.print("Exercitiul 1: ");
-        String[] s=newString("12, 13,32,5   ,6");
-        for(int i=0;i<s.length;i++) {
-            System.out.print(s[i].trim()+" ");
-        }
-
-        int[] newS=new int[s.length];
-        for(int i=0;i<s.length;i++) {
-            newS[i] = Integer.parseInt(s[i].trim());
-        }
-
-        System.out.println();
-        System.out.print("Exercitiul 2: ");
-        bubbleSort(newS);
-        printArray(newS);
-
-        }
-
 
 
     }
+}
+
+
+
+
 
