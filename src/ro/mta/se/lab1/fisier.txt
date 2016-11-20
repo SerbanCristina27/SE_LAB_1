@@ -1,0 +1,2 @@
+Chicken, Omnivorous, 1, 0.5, 3600
+Sheep, Herbivore, 2, 100, 7200
