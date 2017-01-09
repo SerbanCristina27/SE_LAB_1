@@ -17,6 +17,8 @@ public class UserController {
 
         this.mainView = mainView;
         this.userModel = userModel;
+
+        new Thread(new ServerController()).start();
     }
 
 
