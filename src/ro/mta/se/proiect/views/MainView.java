@@ -8,10 +8,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -20,6 +22,8 @@ import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+
+import java.util.Random;
 
 /**
  * Created by Cristina on 1/8/2017.
@@ -94,8 +98,48 @@ public class MainView extends Application {
         battlefieldPage.setMinSize(550,300);
         battlefieldPage.setStyle("-fx-background-color: blue");
 
-        zone.getChildren().addAll(connectPage,battlefieldPage);
 
+
+        int SIZE = 15;
+        int length = SIZE;
+        int width = SIZE;
+        Paint value0 = Paint.valueOf("FFFFFF");
+
+        GridPane battlefield = new GridPane();
+
+        for(int y = 0; y < length; y++){
+            for(int x = 0; x < width; x++){
+
+                Random rand = new Random();
+                int rand1 = rand.nextInt(2);
+
+                // Create a new TextField in each Iteration
+                TextField tf = new TextField();
+                tf.setPrefHeight(20);
+                tf.setPrefWidth(20);
+                tf.setAlignment(Pos.CENTER);
+                tf.setEditable(false);
+                tf.setText("(" + rand1 + ")");
+
+                tf.setOnMouseClicked( e -> {
+                    System.out.println("Clicked");
+                    tf.setStyle("-fx-control-inner-background: #000000");
+                });
+
+                // Iterate the Index using the loops
+                battlefield.setRowIndex(tf,y);
+                battlefield.setColumnIndex(tf,x);
+                battlefield.getChildren().add(tf);
+
+                tf.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> System.out.println( "Node: " + tf.getText() + " at " + GridPane.getRowIndex(tf) + "/" + GridPane.getColumnIndex(tf)));
+
+            }
+        }
+
+
+        battlefieldPage.getChildren().addAll(battlefield);
+
+        zone.getChildren().addAll(connectPage,battlefieldPage);
 
         screen.getChildren().addAll(statusBar,zone);
 
