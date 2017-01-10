@@ -57,7 +57,6 @@ public class ServerController implements Runnable {
                 while(iter.hasNext()){
                     SelectionKey selKey = (SelectionKey) iter.next();
 
-
                     if(selKey.isAcceptable()){
 
                         ServerSocketChannel friend = (ServerSocketChannel)selKey.channel();
@@ -66,17 +65,13 @@ public class ServerController implements Runnable {
                         Socket socket = client.socket();
 
                         try {
-
                             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                             out.println("###HELLO_CHAT_PACKET###");
-
                         } finally {
                             client.close();
                         }
                     }
                 }
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
