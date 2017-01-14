@@ -8,6 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -95,10 +98,10 @@ public class MainView extends Application {
 
 
         battlefieldPage.setGridLinesVisible(true);
+        battlefieldPage.setVgap(20);
+        battlefieldPage.setHgap(20);
         battlefieldPage.setMinSize(550,300);
         battlefieldPage.setStyle("-fx-background-color: blue");
-
-
 
         int SIZE = 15;
         int length = SIZE;
@@ -106,6 +109,7 @@ public class MainView extends Application {
         Paint value0 = Paint.valueOf("FFFFFF");
 
         GridPane battlefield = new GridPane();
+        battlefield.setPadding(new Insets(10, 10, 10, 10));
 
         for(int y = 0; y < length; y++){
             for(int x = 0; x < width; x++){
@@ -122,8 +126,10 @@ public class MainView extends Application {
                 tf.setText("(" + rand1 + ")");
 
                 tf.setOnMouseClicked( e -> {
+
                     System.out.println("Clicked");
                     tf.setStyle("-fx-control-inner-background: #000000");
+
                 });
 
                 // Iterate the Index using the loops
@@ -132,12 +138,30 @@ public class MainView extends Application {
                 battlefield.getChildren().add(tf);
 
                 tf.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> System.out.println( "Node: " + tf.getText() + " at " + GridPane.getRowIndex(tf) + "/" + GridPane.getColumnIndex(tf)));
+                tf.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> tf.setStyle("-fx-control-inner-background: #000000"));
+                tf.addEventFilter(MouseEvent.MOUSE_EXITED, event -> tf.setStyle("-fx-control-inner-background: #FFFFFF"));
+                tf.addEventFilter(MouseEvent.MOUSE_DRAGGED, event -> battlefield.getChildren().get(3).setStyle("-fx-control-inner-background: #000000"));
+                tf.addEventFilter(DragEvent.DRAG_DROPPED, event -> battlefield.getChildren().get(2).setStyle("-fx-control-inner-background: #000000"));
+
 
             }
         }
 
 
-        battlefieldPage.getChildren().addAll(battlefield);
+
+        Image image = new Image("/ro/mta/se/proiect/Images/plane.png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(100);
+        imageView.setFitWidth(100);
+        GridPane grid  = new GridPane();
+        grid.setMinSize(100,100);
+
+        grid.add(imageView,0,0);
+        grid.setPadding(new Insets(10, 10, 10, 10));
+
+        battlefieldPage.add(battlefield,0,0);
+        battlefieldPage.add(grid,1,0);
+
 
         zone.getChildren().addAll(connectPage,battlefieldPage);
 
