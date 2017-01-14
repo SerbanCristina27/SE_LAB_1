@@ -5,17 +5,18 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -125,6 +126,7 @@ public class MainView extends Application {
                 tf.setEditable(false);
                 tf.setText("(" + rand1 + ")");
 
+
                 tf.setOnMouseClicked( e -> {
 
                     System.out.println("Clicked");
@@ -138,11 +140,92 @@ public class MainView extends Application {
                 battlefield.getChildren().add(tf);
 
                 tf.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> System.out.println( "Node: " + tf.getText() + " at " + GridPane.getRowIndex(tf) + "/" + GridPane.getColumnIndex(tf)));
-                tf.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> tf.setStyle("-fx-control-inner-background: #000000"));
-                tf.addEventFilter(MouseEvent.MOUSE_EXITED, event -> tf.setStyle("-fx-control-inner-background: #FFFFFF"));
-                tf.addEventFilter(MouseEvent.MOUSE_DRAGGED, event -> battlefield.getChildren().get(3).setStyle("-fx-control-inner-background: #000000"));
-                tf.addEventFilter(DragEvent.DRAG_DROPPED, event -> battlefield.getChildren().get(2).setStyle("-fx-control-inner-background: #000000"));
+               // tf.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> tf.setStyle("-fx-control-inner-background: #000000"));
+              //  tf.addEventFilter(MouseEvent.MOUSE_EXITED, event -> tf.setStyle("-fx-control-inner-background: #FFFFFF"));
+              //  tf.addEventFilter(MouseEvent.MOUSE_DRAGGED, event -> battlefield.getChildren().get(3).setStyle("-fx-control-inner-background: #000000"));
+               // tf.addEventFilter(DragEvent.DRAG_DROPPED, event -> battlefield.getChildren().get(2).setStyle("-fx-control-inner-background: #000000"));
 
+                tf.setOnDragOver(new EventHandler <DragEvent>() {
+                    public void handle(DragEvent event) {
+
+                        System.out.println("onDragOver");
+
+                        if (event.getGestureSource() != tf &&
+                                event.getDragboard().hasString()) {
+                    /* allow for both copying and moving, whatever user chooses */
+                            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                        }
+
+                        event.consume();
+                    }
+                });
+
+
+                tf.setOnDragEntered(new EventHandler <DragEvent>() {
+                    public void handle(DragEvent event) {
+                /* the drag-and-drop gesture entered the target */
+                     /* the drag-and-drop gesture entered the target */
+                        System.out.println("onDragEntered");
+                /* show to the user that it is an actual gesture target */
+                        if (event.getGestureSource() != tf &&
+                                event.getDragboard().hasString()) {
+                        }
+
+                        event.consume();
+                    }
+                });
+
+                tf.setOnDragExited(new EventHandler <DragEvent>() {
+                    public void handle(DragEvent event) {
+                     /* mouse moved away, remove the graphical cues */
+                        event.consume();
+                    }
+                });
+
+                tf.setOnDragDropped(new EventHandler <DragEvent>() {
+                    public void handle(DragEvent event) {
+                /* data dropped */
+                    /* data dropped */
+                        System.out.println("onDragDropped");
+                /* if there is a string data on dragboard, read it and use it */
+                        Dragboard db = event.getDragboard();
+                        boolean success = false;
+                        if (db.hasString()) {
+                            String confirm = new String(db.getString());
+                            if (confirm.equals("OK")) {
+
+                                Integer rowIndex = GridPane.getRowIndex(tf);
+                                Integer columnIndex = GridPane.getColumnIndex(tf);
+
+                                if (rowIndex <= 15 - 4 && (2 <= columnIndex && columnIndex <= 15 - 3)) {
+
+                                    tf.setText(db.getString());
+                                    tf.setStyle("-fx-control-inner-background: #000000");
+                                    battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex + 2).setStyle("-fx-control-inner-background: #000000");
+                                    battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
+                                    battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                                    battlefield.getChildren().get((rowIndex + 2) * 15 + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                                    battlefield.getChildren().get((rowIndex + 3) * 15 + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                                    battlefield.getChildren().get((rowIndex + 3) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
+                                    battlefield.getChildren().get((rowIndex + 3) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
+                                    battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex - 2).setStyle("-fx-control-inner-background: #000000");
+                                    battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
+                                    success = true;
+
+                                    event.setDropCompleted(success);
+                                    event.consume();
+                                } else {
+                                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                                    alert.setTitle("Error Dialog");
+                                    alert.setHeaderText("Look, an Error Dialog");
+                                    alert.setContentText("Ooops, there was an error!");
+
+                                    alert.showAndWait();
+                                }
+                            }
+                        }
+                    }
+                });
 
             }
         }
@@ -158,6 +241,24 @@ public class MainView extends Application {
 
         grid.add(imageView,0,0);
         grid.setPadding(new Insets(10, 10, 10, 10));
+
+        grid.setOnDragDetected(new EventHandler <MouseEvent>() {
+            public void handle(MouseEvent event) {
+                /* drag was detected, start drag-and-drop gesture*/
+                System.out.println("onDragDetected");
+
+                     /* allow any transfer mode */
+                Dragboard db = grid.startDragAndDrop(TransferMode.ANY);
+
+                /* put a string on dragboard */
+                ClipboardContent content = new ClipboardContent();
+                content.putString("OK");
+                db.setContent(content);
+
+
+                event.consume();
+            }
+        });
 
         battlefieldPage.add(battlefield,0,0);
         battlefieldPage.add(grid,1,0);
