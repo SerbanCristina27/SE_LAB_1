@@ -1,6 +1,7 @@
 package ro.mta.se.proiect.views;
 
 import javafx.application.Application;
+import javafx.collections.ObservableArray;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -14,20 +15,22 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 
+
+import ro.mta.se.proiect.factory.ObserverFactory;
+import  ro.mta.se.proiect.utils.Constants;
+import ro.mta.se.proiect.observables.ObservableBattlefield;
 import java.util.Random;
+
 
 /**
  * Created by Cristina on 1/8/2017.
@@ -35,8 +38,13 @@ import java.util.Random;
 public class MainView extends Application {
 
 
+    public static boolean planeOK;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        planeOK = false;
+
         Group root = new Group();
         primaryStage.setTitle("Hello World");
         Scene scene = new Scene(root, 940, 600);
@@ -197,7 +205,9 @@ public class MainView extends Application {
                                 Integer rowIndex = GridPane.getRowIndex(tf);
                                 Integer columnIndex = GridPane.getColumnIndex(tf);
 
-                                if (rowIndex <= 15 - 4 && (2 <= columnIndex && columnIndex <= 15 - 3)) {
+                                Boolean valide = updateUserBattlefield(rowIndex, columnIndex);
+
+                                if (valide) {
 
                                     tf.setText(db.getString());
                                     tf.setStyle("-fx-control-inner-background: #000000");
@@ -303,6 +313,16 @@ public class MainView extends Application {
     private Node setBaseTitle() {
 
         return new Label();
+    }
+
+    private boolean updateUserBattlefield(Integer rowIndex, Integer columnIndex){
+
+        ObservableBattlefield observableBattlefield = new ObservableBattlefield();
+        ObserverFactory factory = new ObserverFactory();
+        observableBattlefield.addObserver(factory.getObserver("BATTLEFIELD",observableBattlefield));
+        observableBattlefield.setValue(rowIndex,columnIndex);
+
+        return planeOK;
     }
 
 }
