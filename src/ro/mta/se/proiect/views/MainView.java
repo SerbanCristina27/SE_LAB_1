@@ -44,7 +44,6 @@ public class MainView extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         planeOK = false;
-
         Group root = new Group();
         primaryStage.setTitle("Hello World");
         Scene scene = new Scene(root, 940, 600);
@@ -54,12 +53,14 @@ public class MainView extends Application {
 
 
 
+
+
         VBox statusBar = createVBoxContainer(940,50);
         statusBar.setStyle("-fx-background-color: green;\n" +
                 " -fx-font-size: 15px;\n" +
                 " -fx-padding: 15;");
 
-        Text statusText = new Text("Welcome! Invite a friend and play!");
+        Text statusText = new Text("World of Warplanes");
         statusText.setFont(Font.font("Tahoma", FontWeight.NORMAL,30));
         statusBar.getChildren().addAll(statusText);
         statusBar.setAlignment(Pos.CENTER);
@@ -71,6 +72,36 @@ public class MainView extends Application {
         zone.setStyle("-fx-background-color: #2f4f4f;\n" +
                 "    -fx-padding: 15;\n" +
                 "    -fx-spacing: 10;");
+
+
+        GridPane welcomeGrid = new GridPane();
+        welcomeGrid.setMinSize(910,300);
+        welcomeGrid.setHgap(20);
+        welcomeGrid.setVgap(20);
+
+        welcomeGrid.setStyle("-fx-background-color: yellow;");
+
+        Text welcomeText = new Text("Welcome to World of Warplane! Please enter your username below:");
+        welcomeText.setFont(Font.font("Tahoma", FontWeight.NORMAL,15));
+
+        TextField userName = new TextField();
+        userName.setMaxWidth(300);
+        userName.setMinHeight(30);
+        userName.setTranslateX(75);
+
+        Button loginButton = new Button("PLAY");
+        loginButton.setMinHeight(40);
+        loginButton.setMinWidth(100);
+        loginButton.setTranslateX(175);
+
+
+        welcomeGrid.add(welcomeText,0,0);
+        welcomeGrid.add(userName,0,1);
+        welcomeGrid.add(loginButton,0,2);
+        welcomeGrid.setAlignment(Pos.CENTER);
+
+
+        zone.getChildren().add(0,welcomeGrid);
 
 
         GridPane connectPage = new GridPane();
@@ -241,7 +272,6 @@ public class MainView extends Application {
         }
 
 
-
         Image image = new Image("/ro/mta/se/proiect/Images/plane.png");
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(100);
@@ -274,7 +304,7 @@ public class MainView extends Application {
         battlefieldPage.add(grid,1,0);
 
 
-        zone.getChildren().addAll(connectPage,battlefieldPage);
+        //zone.getChildren().addAll(connectPage,battlefieldPage);
 
         screen.getChildren().addAll(statusBar,zone);
 

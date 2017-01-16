@@ -43,12 +43,15 @@ public class UserModel {
 
     public static void setUserBattlefieldMatrix(Constants.Battlefield[][] battlefieldMatrix) {
 
+
+
         for (int i = 0; i < 15; i++) {
 
             Constants.Battlefield[] aMatrix = battlefieldMatrix[i];
             int aLength = aMatrix.length;
-            System.arraycopy(battlefieldMatrix, 0, userBattlefieldMatrix[i],0,aLength);
+            System.arraycopy(aMatrix, 0, userBattlefieldMatrix[i],0,aLength);
 
         }
+
     }
 }

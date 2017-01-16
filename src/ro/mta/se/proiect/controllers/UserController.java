@@ -26,6 +26,8 @@ public class UserController {
     public static boolean updateBattlefieldMatrix(Integer rowIndex, Integer columnIndex)
     {
 
+
+
         if (rowIndex <= 15 - 4 && (2 <= columnIndex && columnIndex <= 15 - 3)){
 
             Constants.Battlefield[][] battlefield = new Constants.Battlefield[15][];
@@ -33,6 +35,7 @@ public class UserController {
             for (int i = 0; i < 15; i++) {
                 battlefield[i] = new Constants.Battlefield[15];
             }
+
 
             battlefield[rowIndex][columnIndex] = Constants.Battlefield.planeHead;
             battlefield[rowIndex+1][columnIndex] = Constants.Battlefield.planeBody;
