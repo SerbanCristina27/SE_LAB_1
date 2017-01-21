@@ -4,23 +4,31 @@ package ro.mta.se.proiect.models;
  * Created by Cristina on 1/9/2017.
  */
 
+import javafx.stage.Stage;
 import ro.mta.se.proiect.utils.Constants;
 
 public class UserModel {
 
     String userName;
     String userIp;
+    Stage stage;
 
     static Constants.Battlefield[][] userBattlefieldMatrix;
 
 
-    public UserModel(){
+    public UserModel(Stage primaryStage){
+
+        this.stage = primaryStage;
         this.userName = "";
         this.userIp = "";
         userBattlefieldMatrix = new Constants.Battlefield[15][];
         for(int i =0 ; i < 15 ; i++){
             userBattlefieldMatrix[i] = new Constants.Battlefield[15];
         }
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 
     public UserModel(String name, String ip){

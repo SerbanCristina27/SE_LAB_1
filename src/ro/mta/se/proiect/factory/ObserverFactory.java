@@ -8,6 +8,7 @@ package ro.mta.se.proiect.factory;
 import ro.mta.se.proiect.observables.ObservableBattlefield;
 import ro.mta.se.proiect.observables.ObservableConnect;
 import ro.mta.se.proiect.observers.ObserverBattlefield;
+import ro.mta.se.proiect.observers.ObserverConnect;
 
 import java.util.Observer;
 

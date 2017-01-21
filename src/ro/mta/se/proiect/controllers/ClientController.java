@@ -15,16 +15,17 @@ public class ClientController implements Runnable {
 
     FriendModel friendModel;
 
-    public ClientController() throws IOException{
+    public ClientController(){
     }
 
-    public ClientController(String serverAddress, Integer portNumber) throws IOException {
+    public ClientController(String serverAddress, Integer portNumber){
         friendModel = new FriendModel(serverAddress,portNumber);
     }
 
     public  ClientController(String friendName, String serverAddress, Integer portNumber) throws IOException {
         friendModel = new FriendModel(friendName,serverAddress,portNumber);
     }
+
 
     @Override
     public void run(){

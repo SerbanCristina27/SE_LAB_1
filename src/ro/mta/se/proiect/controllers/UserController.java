@@ -16,24 +16,34 @@ import ro.mta.se.proiect.models.*;
  */
 public class UserController {
 
-    static MainView mainView;
-    static UserModel userModel;
+    MainView mainView;
+    UserModel userModel;
+    ClientController clientController;
 
-    public UserController(MainView mainView,UserModel userModel) {
+    public UserController(UserModel userModel) {
 
-        this.mainView = mainView;
+        this.mainView = new MainView();
         this.userModel = userModel;
 
-
         new Thread(new ServerController()).start();
+    }
 
-        MainView.launch(mainView.getClass());
+
+    public void show(){
+        mainView.show(userModel.getStage());
+    }
+
+    public static boolean connectToFriend(String ip, Integer port){
+
+        //clientController = new ClientController(ip,port);
+
+
+        return false;
     }
 
 
     public static boolean updateBattlefieldMatrix(Integer rowIndex, Integer columnIndex)
     {
-
 
 
         if (rowIndex <= 15 - 4 && (2 <= columnIndex && columnIndex <= 15 - 3)){
@@ -64,5 +74,7 @@ public class UserController {
             return false;
         }
     }
+
+
 
 }

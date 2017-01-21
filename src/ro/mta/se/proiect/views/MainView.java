@@ -1,22 +1,19 @@
 package ro.mta.se.proiect.views;
 
 import javafx.application.Application;
-import javafx.event.EventType;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -35,31 +32,28 @@ import java.util.Random;
 /**
  * Created by Cristina on 1/8/2017.
  */
-public class MainView extends Application{
+public class MainView{
 
     public static boolean planeOK;
-    Button loginButton;
+    public Button loginButton;
     TextField userName;
     HBox zone;
     GridPane connectPage;
     GridPane battlefieldPage;
     GridPane welcomeGrid;
-    Scene preloaderScene;
-    Stage preloaderStage;
+    public Scene preloaderScene;
+    public Stage preloaderStage;
     Group root;
     ObservableBattlefield observableBattlefield;
     ObserverFactory factory;
-
-
+    public GridPane battlefield;
 
     public TextField getUserName() {
         return userName;
     }
 
 
-
-    @Override
-    public void init() throws Exception {
+    public MainView(){
 
         planeOK = false;
         root = new Group();
@@ -150,8 +144,29 @@ public class MainView extends Application{
         TextField textIp = new TextField();
         connectPage.add(textIp,1,2);
 
+
+        Label userPort = new Label("User port:");
+        connectPage.add(userPort,0,4);
+
+        final ComboBox portComboBox = new ComboBox();
+        portComboBox.getItems().addAll(
+                "13131",
+                "13132",
+                "13133",
+                "13134",
+                "13135"
+        );
+
+
+        portComboBox.setValue("13131");
+
+
+        connectPage.add(portComboBox,1,4);
+
         Button connectBtn = new Button("Connect");
+        connectBtn.setMinWidth(200);
         HBox hbBtn = new HBox(10);
+
 
         connectBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -161,9 +176,36 @@ public class MainView extends Application{
         });
 
         hbBtn.getChildren().add(connectBtn);
-        connectPage.add(hbBtn,1,4,1,1);
+        connectPage.add(hbBtn,1,8,1,1);
 
 
+        Label invitation = new Label("A friend invite you to battle!!");
+
+        DropShadow ds = new DropShadow();
+        ds.setOffsetY(4.0f);
+        ds.setColor(Color.color(0.4f, 0.4f, 0.4f));
+
+        invitation.setEffect(ds);
+        invitation.setCache(true);
+        invitation.setTextFill(Color.BLUE);
+        invitation.setFont(Font.font(null, FontWeight.BOLD, 16));
+
+        connectPage.add(invitation,1,11);
+
+        Button acceptInvitaton = new Button("Accept the invitation");
+        acceptInvitaton.setMinWidth(200);
+
+        HBox hbInvitation = new HBox(10);
+
+        acceptInvitaton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+            }
+        });
+
+        hbInvitation.getChildren().add(acceptInvitaton);
+        connectPage.add(hbInvitation,1,13);
 
         battlefieldPage.setGridLinesVisible(true);
         battlefieldPage.setVgap(20);
@@ -175,7 +217,7 @@ public class MainView extends Application{
         int length = SIZE;
         int width = SIZE;
 
-        GridPane battlefield = new GridPane();
+        battlefield = new GridPane();
         battlefield.setPadding(new Insets(10, 10, 10, 10));
 
         for(int y = 0; y < length; y++){
@@ -357,14 +399,14 @@ public class MainView extends Application{
 
     }
 
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Hello World");
-        preloaderStage = primaryStage;
-        preloaderStage.setScene(preloaderScene);
-        preloaderStage.show();
+    public void show(Stage stage){
+        stage.setTitle("asda");
+        stage.setScene(preloaderScene);
+        stage.show();
     }
+
+
+
 
     private HBox createHBoxContainer(double width, double height) {
         HBox base = new HBox(); // box

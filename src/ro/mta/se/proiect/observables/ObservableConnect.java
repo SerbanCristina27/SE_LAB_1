@@ -8,10 +8,12 @@ import java.util.Observable;
 public class ObservableConnect extends Observable {
 
     String friendIp;
+    Integer port;
 
-    public void setValue(String friendIp) {
+    public void setValue(String friendIp,Integer port) {
 
         this.friendIp = friendIp;
+        this.port = port;
 
         setChanged();
         notifyObservers();
@@ -23,5 +25,13 @@ public class ObservableConnect extends Observable {
 
     public void setFriendIp(String friendIp) {
         this.friendIp = friendIp;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public Integer getPort() {
+        return port;
     }
 }
