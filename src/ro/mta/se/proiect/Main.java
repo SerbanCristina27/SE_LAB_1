@@ -1,5 +1,6 @@
 package ro.mta.se.proiect;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -28,10 +29,10 @@ public class Main {
         MainView view = new MainView();
         UserModel user = new UserModel();
 
+
         UserController userController = new UserController(view,user);
 
-        MainView.launch(view.getClass());
-    }
 
+    }
 }
 

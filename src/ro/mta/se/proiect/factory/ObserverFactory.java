@@ -7,20 +7,19 @@ package ro.mta.se.proiect.factory;
 
 import ro.mta.se.proiect.observables.ObservableBattlefield;
 import ro.mta.se.proiect.observers.ObserverBattlefield;
-import ro.mta.se.proiect.views.MainView;
 
 import java.util.Observer;
 
 public class ObserverFactory {
 
-    public Observer getObserver(String observerType, ObservableBattlefield observableBattlefield)
+    public Observer getObserver(String observerType, Object observable)
     {
         if(observerType == null){
             return null;
         }
 
         if(observerType.equalsIgnoreCase("BATTLEFIELD")){
-            return new ObserverBattlefield(observableBattlefield);
+            return new ObserverBattlefield((ObservableBattlefield)observable);
         }
         else
         {

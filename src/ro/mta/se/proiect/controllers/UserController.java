@@ -1,6 +1,11 @@
 package ro.mta.se.proiect.controllers;
 
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
 import ro.mta.se.proiect.utils.Constants;
 import ro.mta.se.proiect.views.*;
 import ro.mta.se.proiect.models.*;
@@ -11,15 +16,18 @@ import ro.mta.se.proiect.models.*;
  */
 public class UserController {
 
-    MainView mainView;
-    UserModel userModel;
+    static MainView mainView;
+    static UserModel userModel;
 
     public UserController(MainView mainView,UserModel userModel) {
 
         this.mainView = mainView;
         this.userModel = userModel;
 
+
         new Thread(new ServerController()).start();
+
+        MainView.launch(mainView.getClass());
     }
 
 
@@ -56,8 +64,5 @@ public class UserController {
             return false;
         }
     }
-
-
-
 
 }

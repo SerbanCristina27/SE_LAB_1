@@ -1,7 +1,7 @@
 package ro.mta.se.proiect.views;
 
 import javafx.application.Application;
-import javafx.collections.ObservableArray;
+import javafx.event.EventType;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -27,32 +27,44 @@ import javafx.geometry.Insets;
 
 
 import ro.mta.se.proiect.factory.ObserverFactory;
-import  ro.mta.se.proiect.utils.Constants;
 import ro.mta.se.proiect.observables.ObservableBattlefield;
+
 import java.util.Random;
 
 
 /**
  * Created by Cristina on 1/8/2017.
  */
-public class MainView extends Application {
-
+public class MainView extends Application{
 
     public static boolean planeOK;
+    Button loginButton;
+    TextField userName;
+    HBox zone;
+    GridPane connectPage;
+    GridPane battlefieldPage;
+    GridPane welcomeGrid;
+    Scene preloaderScene;
+    Stage preloaderStage;
+    Group root;
+
+
+
+
+    public TextField getUserName() {
+        return userName;
+    }
+
+
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void init() throws Exception {
 
         planeOK = false;
-        Group root = new Group();
-        primaryStage.setTitle("Hello World");
-        Scene scene = new Scene(root, 940, 600);
+        root = new Group();
 
 
         VBox screen = createVBoxContainer(940,600);
-
-
-
 
 
         VBox statusBar = createVBoxContainer(940,50);
@@ -66,7 +78,7 @@ public class MainView extends Application {
         statusBar.setAlignment(Pos.CENTER);
 
 
-        HBox zone = createHBoxContainer(940,550);
+        zone = createHBoxContainer(940,550);
 
 
         zone.setStyle("-fx-background-color: #2f4f4f;\n" +
@@ -74,7 +86,7 @@ public class MainView extends Application {
                 "    -fx-spacing: 10;");
 
 
-        GridPane welcomeGrid = new GridPane();
+        welcomeGrid = new GridPane();
         welcomeGrid.setMinSize(910,300);
         welcomeGrid.setHgap(20);
         welcomeGrid.setVgap(20);
@@ -84,16 +96,24 @@ public class MainView extends Application {
         Text welcomeText = new Text("Welcome to World of Warplane! Please enter your username below:");
         welcomeText.setFont(Font.font("Tahoma", FontWeight.NORMAL,15));
 
-        TextField userName = new TextField();
+        userName = new TextField();
         userName.setMaxWidth(300);
         userName.setMinHeight(30);
         userName.setTranslateX(75);
 
-        Button loginButton = new Button("PLAY");
+        loginButton = new Button("PLAY");
         loginButton.setMinHeight(40);
         loginButton.setMinWidth(100);
         loginButton.setTranslateX(175);
 
+
+        loginButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                zone.getChildren().removeAll(welcomeGrid);
+                zone.getChildren().addAll(connectPage, battlefieldPage);
+            }
+        });
 
         welcomeGrid.add(welcomeText,0,0);
         welcomeGrid.add(userName,0,1);
@@ -104,8 +124,8 @@ public class MainView extends Application {
         zone.getChildren().add(0,welcomeGrid);
 
 
-        GridPane connectPage = new GridPane();
-        GridPane battlefieldPage = new GridPane();
+        connectPage = new GridPane();
+        battlefieldPage = new GridPane();
 
 
         connectPage.setMinSize(350,300);
@@ -146,7 +166,6 @@ public class MainView extends Application {
         int SIZE = 15;
         int length = SIZE;
         int width = SIZE;
-        Paint value0 = Paint.valueOf("FFFFFF");
 
         GridPane battlefield = new GridPane();
         battlefield.setPadding(new Insets(10, 10, 10, 10));
@@ -179,10 +198,6 @@ public class MainView extends Application {
                 battlefield.getChildren().add(tf);
 
                 tf.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> System.out.println( "Node: " + tf.getText() + " at " + GridPane.getRowIndex(tf) + "/" + GridPane.getColumnIndex(tf)));
-               // tf.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> tf.setStyle("-fx-control-inner-background: #000000"));
-              //  tf.addEventFilter(MouseEvent.MOUSE_EXITED, event -> tf.setStyle("-fx-control-inner-background: #FFFFFF"));
-              //  tf.addEventFilter(MouseEvent.MOUSE_DRAGGED, event -> battlefield.getChildren().get(3).setStyle("-fx-control-inner-background: #000000"));
-               // tf.addEventFilter(DragEvent.DRAG_DROPPED, event -> battlefield.getChildren().get(2).setStyle("-fx-control-inner-background: #000000"));
 
                 tf.setOnDragOver(new EventHandler <DragEvent>() {
                     public void handle(DragEvent event) {
@@ -277,9 +292,28 @@ public class MainView extends Application {
         imageView.setFitHeight(100);
         imageView.setFitWidth(100);
         GridPane grid  = new GridPane();
+        grid.setVgap(20);
         grid.setMinSize(100,100);
 
         grid.add(imageView,0,0);
+
+        Image arrow = new Image("/ro/mta/se/proiect/Images/arrow.png");
+        ImageView arrowView = new ImageView(arrow);
+        arrowView.setFitHeight(20);
+        arrowView.setFitWidth(20);
+        arrowView.setRotate(arrowView.getRotate() + 270);
+        arrowView.setTranslateX(40);
+
+        arrowView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                arrowView.setRotate(arrowView.getRotate() + 90);
+                imageView.setRotate(imageView.getRotate() + 90);
+            }
+        });
+
+        grid .add(arrowView,0,1);
+
         grid.setPadding(new Insets(10, 10, 10, 10));
 
         grid.setOnDragDetected(new EventHandler <MouseEvent>() {
@@ -304,19 +338,24 @@ public class MainView extends Application {
         battlefieldPage.add(grid,1,0);
 
 
-        //zone.getChildren().addAll(connectPage,battlefieldPage);
-
         screen.getChildren().addAll(statusBar,zone);
 
-
         root.getChildren().addAll(screen);
-        primaryStage.setScene(scene);
-        primaryStage.show();
 
+        preloaderScene = new Scene(root, 940, 600);
 
     }
 
-    private HBox createHBoxContainer(double width,double height) {
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("Hello World");
+        preloaderStage = primaryStage;
+        preloaderStage.setScene(preloaderScene);
+        preloaderStage.show();
+    }
+
+    private HBox createHBoxContainer(double width, double height) {
         HBox base = new HBox(); // box
         base.setPrefWidth(width);
         base.setPrefHeight(height);
@@ -351,8 +390,14 @@ public class MainView extends Application {
         ObserverFactory factory = new ObserverFactory();
         observableBattlefield.addObserver(factory.getObserver("BATTLEFIELD",observableBattlefield));
         observableBattlefield.setValue(rowIndex,columnIndex);
-
         return planeOK;
     }
+
+
+    public void switchint() {
+        zone.getChildren().removeAll(welcomeGrid);
+        zone.getChildren().addAll(connectPage, battlefieldPage);
+    }
+
 
 }
