@@ -25,6 +25,7 @@ import javafx.geometry.Insets;
 
 import ro.mta.se.proiect.factory.ObserverFactory;
 import ro.mta.se.proiect.observables.ObservableBattlefield;
+import ro.mta.se.proiect.utils.Constants;
 
 import java.util.Random;
 
@@ -42,16 +43,28 @@ public class MainView{
     GridPane battlefieldPage;
     GridPane welcomeGrid;
     public Scene preloaderScene;
-    public Stage preloaderStage;
     Group root;
     ObservableBattlefield observableBattlefield;
     ObserverFactory factory;
     public GridPane battlefield;
+    ImageView arrowView;
+    ImageView imageView;
 
     public TextField getUserName() {
         return userName;
     }
 
+    public ImageView getArrowView() {
+        return arrowView;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public GridPane getBattlefield() {
+        return battlefield;
+    }
 
     public MainView(){
 
@@ -234,110 +247,17 @@ public class MainView{
                 tf.setEditable(false);
 
 
-                tf.setOnMouseClicked( e -> {
-
-                    System.out.println("Clicked");
-                    tf.setStyle("-fx-control-inner-background: #000000");
-
-                });
-
                 // Iterate the Index using the loops
                 battlefield.setRowIndex(tf,y);
                 battlefield.setColumnIndex(tf,x);
                 battlefield.getChildren().add(tf);
-
-                tf.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> System.out.println( "Node: " + tf.getText() + " at " + GridPane.getRowIndex(tf) + "/" + GridPane.getColumnIndex(tf)));
-
-                tf.setOnDragOver(new EventHandler <DragEvent>() {
-                    public void handle(DragEvent event) {
-
-                        System.out.println("onDragOver");
-
-                        if (event.getGestureSource() != tf &&
-                                event.getDragboard().hasString()) {
-                    /* allow for both copying and moving, whatever user chooses */
-                            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                        }
-
-                        event.consume();
-                    }
-                });
-
-
-                tf.setOnDragEntered(new EventHandler <DragEvent>() {
-                    public void handle(DragEvent event) {
-                /* the drag-and-drop gesture entered the target */
-                     /* the drag-and-drop gesture entered the target */
-                        System.out.println("onDragEntered");
-                /* show to the user that it is an actual gesture target */
-                        if (event.getGestureSource() != tf &&
-                                event.getDragboard().hasString()) {
-                        }
-
-                        event.consume();
-                    }
-                });
-
-                tf.setOnDragExited(new EventHandler <DragEvent>() {
-                    public void handle(DragEvent event) {
-                     /* mouse moved away, remove the graphical cues */
-                        event.consume();
-                    }
-                });
-
-                tf.setOnDragDropped(new EventHandler <DragEvent>() {
-                    public void handle(DragEvent event) {
-                /* data dropped */
-                    /* data dropped */
-                        System.out.println("onDragDropped");
-                /* if there is a string data on dragboard, read it and use it */
-                        Dragboard db = event.getDragboard();
-                        boolean success = false;
-                        if (db.hasString()) {
-                            String confirm = new String(db.getString());
-                            if (confirm.equals("OK")) {
-
-                                Integer rowIndex = GridPane.getRowIndex(tf);
-                                Integer columnIndex = GridPane.getColumnIndex(tf);
-
-                                Boolean valide = updateUserBattlefield(rowIndex, columnIndex);
-
-                                if (valide) {
-
-                                    tf.setText(db.getString());
-                                    tf.setStyle("-fx-control-inner-background: #000000");
-                                    battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex + 2).setStyle("-fx-control-inner-background: #000000");
-                                    battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
-                                    battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex).setStyle("-fx-control-inner-background: #000000");
-                                    battlefield.getChildren().get((rowIndex + 2) * 15 + columnIndex).setStyle("-fx-control-inner-background: #000000");
-                                    battlefield.getChildren().get((rowIndex + 3) * 15 + columnIndex).setStyle("-fx-control-inner-background: #000000");
-                                    battlefield.getChildren().get((rowIndex + 3) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
-                                    battlefield.getChildren().get((rowIndex + 3) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
-                                    battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex - 2).setStyle("-fx-control-inner-background: #000000");
-                                    battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
-                                    success = true;
-
-                                    event.setDropCompleted(success);
-                                    event.consume();
-                                } else {
-                                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                                    alert.setTitle("Error Dialog");
-                                    alert.setHeaderText("Look, an Error Dialog");
-                                    alert.setContentText("Ooops, there was an error!");
-
-                                    alert.showAndWait();
-                                }
-                            }
-                        }
-                    }
-                });
 
             }
         }
 
 
         Image image = new Image("/ro/mta/se/proiect/Images/plane.png");
-        ImageView imageView = new ImageView(image);
+        imageView = new ImageView(image);
         imageView.setFitHeight(100);
         imageView.setFitWidth(100);
         GridPane grid  = new GridPane();
@@ -347,19 +267,13 @@ public class MainView{
         grid.add(imageView,0,0);
 
         Image arrow = new Image("/ro/mta/se/proiect/Images/arrow.png");
-        ImageView arrowView = new ImageView(arrow);
+        arrowView = new ImageView(arrow);
         arrowView.setFitHeight(20);
         arrowView.setFitWidth(20);
         arrowView.setRotate(arrowView.getRotate() + 270);
         arrowView.setTranslateX(40);
 
-        arrowView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                arrowView.setRotate(arrowView.getRotate() + 90);
-                imageView.setRotate(imageView.getRotate() + 90);
-            }
-        });
+
 
         grid .add(arrowView,0,1);
 
@@ -437,9 +351,119 @@ public class MainView{
         return new Label();
     }
 
-    private boolean updateUserBattlefield(Integer rowIndex, Integer columnIndex){
-        observableBattlefield.setValue(rowIndex,columnIndex);
-        return planeOK;
+    public void updateUserBattlefield(Integer rowIndex, Integer columnIndex, Constants.PlanePosition position) {
+
+
+        if (position.equals(Constants.PlanePosition.up)) {
+
+            observableBattlefield.setValue(rowIndex, columnIndex);
+            if(planeOK) {
+
+                battlefield.getChildren().get((rowIndex * 15) + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex + 2).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 2) * 15 + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 3) * 15 + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 3) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 3) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex - 2).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
+            }
+            else{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setHeaderText("Look, an Error Dialog");
+                alert.setContentText("Ooops, there was an error!");
+
+                alert.showAndWait();
+            }
+
+
+        } else if (position.equals(Constants.PlanePosition.right)){
+
+            observableBattlefield.setValue(rowIndex, columnIndex);
+            if(planeOK) {
+
+                battlefield.getChildren().get((rowIndex * 15) + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex) * 15 + columnIndex - 2).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex) * 15 + columnIndex - 3).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 2) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 1) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 2) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 1) * 15 + columnIndex - 3).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex - 3).setStyle("-fx-control-inner-background: #000000");
+            }
+            else{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setHeaderText("Look, an Error Dialog");
+                alert.setContentText("Ooops, there was an error!");
+
+                alert.showAndWait();
+            }
+
+        }
+        else if (position.equals(Constants.PlanePosition.down)){
+            observableBattlefield.setValue(rowIndex, columnIndex);
+            if(planeOK) {
+
+                battlefield.getChildren().get((rowIndex * 15) + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 1) * 15 + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 2) * 15 + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 3) * 15 + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 1) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 1) * 15 + columnIndex + 2).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 1) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 1) * 15 + columnIndex - 2).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 3) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 3) * 15 + columnIndex - 1).setStyle("-fx-control-inner-background: #000000");
+            }
+            else{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setHeaderText("Look, an Error Dialog");
+                alert.setContentText("Ooops, there was an error!");
+
+                alert.showAndWait();
+            }
+        }
+        else if (position.equals(Constants.PlanePosition.left)){
+
+            observableBattlefield.setValue(rowIndex, columnIndex);
+            if(planeOK) {
+
+                battlefield.getChildren().get((rowIndex * 15) + columnIndex).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex) * 15 + columnIndex + 2).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex) * 15 + columnIndex + 3).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex + 3).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 1) * 15 + columnIndex + 3).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 1) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex + 2) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 1) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
+                battlefield.getChildren().get((rowIndex - 2) * 15 + columnIndex + 1).setStyle("-fx-control-inner-background: #000000");
+            }
+            else{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setHeaderText("Look, an Error Dialog");
+                alert.setContentText("Ooops, there was an error!");
+
+                alert.showAndWait();
+            }
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Look, an Error Dialog");
+            alert.setContentText("Ooops, there was an error!");
+
+            alert.showAndWait();
+        }
+
     }
 
 

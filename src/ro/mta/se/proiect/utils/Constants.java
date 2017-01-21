@@ -20,11 +20,24 @@ public class Constants {
     public static final int SEND_MESSAGE = 1;
     public static final int RECEIVE_MESSAGE = 2;
 
+
     public enum Battlefield {
 
         planeHead,planeBody,empty
 
     }
+
+    public enum PlanePosition {
+        up,right,down,left;
+        private static PlanePosition[] vals = values();
+        public PlanePosition next()
+        {
+            return vals[(this.ordinal()+1) % vals.length];
+        }
+    }
+
+    public static final int SIZE = 15;
+
 
     public interface LogLevel {
 

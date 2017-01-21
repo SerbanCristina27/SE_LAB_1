@@ -7,24 +7,39 @@ package ro.mta.se.proiect.models;
 import javafx.stage.Stage;
 import ro.mta.se.proiect.utils.Constants;
 
+import javax.swing.text.Position;
+
 public class UserModel {
 
     String userName;
     String userIp;
     Stage stage;
+    public static Constants.PlanePosition position;
 
-    static Constants.Battlefield[][] userBattlefieldMatrix;
+    public static Constants.Battlefield[][] userBattlefieldMatrix;
 
 
     public UserModel(Stage primaryStage){
 
         this.stage = primaryStage;
+        this.position = Constants.PlanePosition.up;
         this.userName = "";
         this.userIp = "";
         userBattlefieldMatrix = new Constants.Battlefield[15][];
         for(int i =0 ; i < 15 ; i++){
             userBattlefieldMatrix[i] = new Constants.Battlefield[15];
         }
+        for (int i = 0; i < Constants.SIZE; i++)
+            for(int j = 0; j < Constants.SIZE; j++)
+                userBattlefieldMatrix[i][j] = Constants.Battlefield.empty;
+    }
+
+    public Constants.PlanePosition getPosition() {
+        return position;
+    }
+
+    public void setPosition(Constants.PlanePosition position) {
+        this.position = position;
     }
 
     public Stage getStage() {
@@ -41,6 +56,10 @@ public class UserModel {
 
     }
 
+    public int getStaticSize(){
+        return Constants.SIZE;
+    }
+
     public String getUserName(){return userName;}
 
     public String getUserIp(){return userIp;}
@@ -49,17 +68,8 @@ public class UserModel {
 
     public void setUserIp(String userIp) {this.userIp = userIp;}
 
-    public static void setUserBattlefieldMatrix(Constants.Battlefield[][] battlefieldMatrix) {
 
-
-
-        for (int i = 0; i < 15; i++) {
-
-            Constants.Battlefield[] aMatrix = battlefieldMatrix[i];
-            int aLength = aMatrix.length;
-            System.arraycopy(aMatrix, 0, userBattlefieldMatrix[i],0,aLength);
-
-        }
-
+    public static Constants.Battlefield getPositionValue(Integer row, Integer column){
+        return userBattlefieldMatrix[row][column];
     }
 }

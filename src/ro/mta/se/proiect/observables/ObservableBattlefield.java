@@ -2,6 +2,8 @@ package ro.mta.se.proiect.observables;
 
 
 
+import ro.mta.se.proiect.utils.Constants;
+
 import java.util.Observable;
 
 /**
@@ -18,7 +20,6 @@ public class ObservableBattlefield extends Observable {
         this.rowIndex = rowIndex;
         this.columnIndex = columnIndex;
 
-
         setChanged();
         notifyObservers();
     }
@@ -30,4 +31,5 @@ public class ObservableBattlefield extends Observable {
     public Integer getColumnIndex() {
         return columnIndex;
     }
+
 }

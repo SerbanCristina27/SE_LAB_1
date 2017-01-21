@@ -25,9 +25,7 @@ public class ObserverConnect implements Observer {
         if(o == observableConnect){
             System.out.println("Observer ok!");
 
-            if(UserController.connectToFriend(observableConnect.getFriendIp(),observableConnect.getPort())){
 
-            }
 
         }
     }
