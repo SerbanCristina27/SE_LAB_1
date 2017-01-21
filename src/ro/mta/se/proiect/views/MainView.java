@@ -47,7 +47,8 @@ public class MainView extends Application{
     Scene preloaderScene;
     Stage preloaderStage;
     Group root;
-
+    ObservableBattlefield observableBattlefield;
+    ObserverFactory factory;
 
 
 
@@ -152,6 +153,13 @@ public class MainView extends Application{
         Button connectBtn = new Button("Connect");
         HBox hbBtn = new HBox(10);
 
+        connectBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+            }
+        });
+
         hbBtn.getChildren().add(connectBtn);
         connectPage.add(hbBtn,1,4,1,1);
 
@@ -182,7 +190,6 @@ public class MainView extends Application{
                 tf.setPrefWidth(20);
                 tf.setAlignment(Pos.CENTER);
                 tf.setEditable(false);
-                tf.setText("(" + rand1 + ")");
 
 
                 tf.setOnMouseClicked( e -> {
@@ -342,6 +349,10 @@ public class MainView extends Application{
 
         root.getChildren().addAll(screen);
 
+        observableBattlefield = new ObservableBattlefield();
+        factory = new ObserverFactory();
+        observableBattlefield.addObserver(factory.getObserver("BATTLEFIELD",observableBattlefield));
+
         preloaderScene = new Scene(root, 940, 600);
 
     }
@@ -385,10 +396,6 @@ public class MainView extends Application{
     }
 
     private boolean updateUserBattlefield(Integer rowIndex, Integer columnIndex){
-
-        ObservableBattlefield observableBattlefield = new ObservableBattlefield();
-        ObserverFactory factory = new ObserverFactory();
-        observableBattlefield.addObserver(factory.getObserver("BATTLEFIELD",observableBattlefield));
         observableBattlefield.setValue(rowIndex,columnIndex);
         return planeOK;
     }

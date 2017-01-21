@@ -6,6 +6,7 @@ package ro.mta.se.proiect.factory;
 
 
 import ro.mta.se.proiect.observables.ObservableBattlefield;
+import ro.mta.se.proiect.observables.ObservableConnect;
 import ro.mta.se.proiect.observers.ObserverBattlefield;
 
 import java.util.Observer;
@@ -20,6 +21,9 @@ public class ObserverFactory {
 
         if(observerType.equalsIgnoreCase("BATTLEFIELD")){
             return new ObserverBattlefield((ObservableBattlefield)observable);
+        }
+        else if(observerType.equalsIgnoreCase("CONNECT")){
+            return  new ObserverConnect((ObservableConnect)observable);
         }
         else
         {
