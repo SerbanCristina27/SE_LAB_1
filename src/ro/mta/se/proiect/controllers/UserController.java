@@ -37,6 +37,7 @@ public class UserController {
         mainView.show(userModel.getStage());
         addArrowEvent();
         addBattleFieldEvent();
+        addFightEvent();
     }
 
     private void addArrowEvent(){
@@ -48,6 +49,24 @@ public class UserController {
                 userModel.setPosition(userModel.getPosition().next());
             }
         });
+    }
+
+    private void addFightEvent(){
+
+        mainView.connectBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                mainView.switchToBattle();
+            }
+        });
+
+        mainView.acceptInvitaton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                mainView.switchToBattle();
+            }
+        });
+
     }
 
     private void addBattleFieldEvent(){

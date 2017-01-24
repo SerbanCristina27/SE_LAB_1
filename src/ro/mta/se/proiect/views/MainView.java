@@ -37,6 +37,8 @@ public class MainView{
 
     public static boolean planeOK;
     public Button loginButton;
+    public Button connectBtn;
+    public Button acceptInvitaton;
     TextField userName;
     HBox zone;
     GridPane connectPage;
@@ -49,6 +51,9 @@ public class MainView{
     public GridPane battlefield;
     ImageView arrowView;
     ImageView imageView;
+    GridPane friendPage;
+    GridPane userPage;
+    public GridPane enemyBattlefield;
 
     public TextField getUserName() {
         return userName;
@@ -141,7 +146,6 @@ public class MainView{
                 " -fx-font-size: 15px;");
 
 
-        //connectPage.setGridLinesVisible(true);
         connectPage.setHgap(10);
         connectPage.setVgap(10);
         connectPage.setPadding(new Insets(10,10,10,10));
@@ -176,17 +180,11 @@ public class MainView{
 
         connectPage.add(portComboBox,1,4);
 
-        Button connectBtn = new Button("Connect");
+        connectBtn = new Button("Connect");
         connectBtn.setMinWidth(200);
         HBox hbBtn = new HBox(10);
 
 
-        connectBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-
-            }
-        });
 
         hbBtn.getChildren().add(connectBtn);
         connectPage.add(hbBtn,1,8,1,1);
@@ -205,7 +203,7 @@ public class MainView{
 
         connectPage.add(invitation,1,11);
 
-        Button acceptInvitaton = new Button("Accept the invitation");
+        acceptInvitaton = new Button("Accept the invitation");
         acceptInvitaton.setMinWidth(200);
 
         HBox hbInvitation = new HBox(10);
@@ -231,6 +229,7 @@ public class MainView{
         int width = SIZE;
 
         battlefield = new GridPane();
+        battlefield.setMaxSize(400,300);
         battlefield.setPadding(new Insets(10, 10, 10, 10));
 
         for(int y = 0; y < length; y++){
@@ -241,8 +240,6 @@ public class MainView{
 
                 // Create a new TextField in each Iteration
                 TextField tf = new TextField();
-                tf.setPrefHeight(20);
-                tf.setPrefWidth(20);
                 tf.setAlignment(Pos.CENTER);
                 tf.setEditable(false);
 
@@ -300,6 +297,58 @@ public class MainView{
         battlefieldPage.add(battlefield,0,0);
         battlefieldPage.add(grid,1,0);
 
+        friendPage = new GridPane();
+        userPage = new GridPane();
+
+
+        friendPage.setMinSize(450,300);
+        friendPage.setStyle("-fx-background-color: red;\n" +
+                " -fx-font-size: 15px;");
+
+
+        friendPage.setHgap(10);
+        friendPage.setVgap(10);
+        friendPage.setPadding(new Insets(10,10,10,10));
+
+
+
+        userPage.setMinSize(450,300);
+        userPage.setStyle("-fx-background-color: blue;\n" +
+                " -fx-font-size: 15px;");
+
+
+        userPage.setHgap(10);
+        userPage.setVgap(10);
+        userPage.setPadding(new Insets(10,10,10,10));
+
+
+        enemyBattlefield = new GridPane();
+        battlefield.setPadding(new Insets(10, 10, 10, 10));
+
+        for(int y = 0; y < length; y++){
+            for(int x = 0; x < width; x++){
+
+                Random rand = new Random();
+                int rand1 = rand.nextInt(2);
+
+                // Create a new TextField in each Iteration
+                TextField tf = new TextField();
+                tf.setAlignment(Pos.CENTER);
+                tf.setEditable(false);
+
+
+                // Iterate the Index using the loops
+                enemyBattlefield.setRowIndex(tf,y);
+                enemyBattlefield.setColumnIndex(tf,x);
+                enemyBattlefield.getChildren().add(tf);
+
+            }
+        }
+
+
+
+        friendPage.getChildren().addAll(enemyBattlefield);
+        friendPage.setAlignment(Pos.CENTER);
 
         screen.getChildren().addAll(statusBar,zone);
 
@@ -470,6 +519,16 @@ public class MainView{
     public void switchint() {
         zone.getChildren().removeAll(welcomeGrid);
         zone.getChildren().addAll(connectPage, battlefieldPage);
+    }
+
+    public void switchToBattle(){
+        zone.getChildren().removeAll(connectPage, battlefieldPage);
+
+        userPage.setAlignment(Pos.CENTER);
+        battlefield.setMaxSize(500,500);
+        userPage.getChildren().addAll(battlefield);
+
+        zone.getChildren().addAll(friendPage,userPage);
     }
 
 
