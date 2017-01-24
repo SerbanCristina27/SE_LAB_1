@@ -18,15 +18,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 
 
+import javafx.stage.StageStyle;
 import ro.mta.se.proiect.factory.ObserverFactory;
 import ro.mta.se.proiect.observables.ObservableBattlefield;
 import ro.mta.se.proiect.utils.Constants;
 
+import java.sql.BatchUpdateException;
 import java.util.Random;
 
 
@@ -54,6 +57,13 @@ public class MainView{
     GridPane friendPage;
     GridPane userPage;
     public GridPane enemyBattlefield;
+    private TextField textIp;
+    final ComboBox<Integer> portComboBox;
+    Stage primaryStage;
+    public Button attackButton;
+    public Button exit;
+    final Stage dialog;
+    HBox dialogHbox;
 
     public TextField getUserName() {
         return userName;
@@ -69,6 +79,18 @@ public class MainView{
 
     public GridPane getBattlefield() {
         return battlefield;
+    }
+
+    public String getTextIp() {
+        return textIp.getText();
+    }
+
+    public Integer getPortComboBox() {
+        return portComboBox.getValue();
+    }
+
+    public GridPane getEnemyBattlefield() {
+        return enemyBattlefield;
     }
 
     public MainView(){
@@ -158,24 +180,24 @@ public class MainView{
         Label userIp = new Label("User IP:");
         connectPage.add(userIp,0,2);
 
-        TextField textIp = new TextField();
+        textIp = new TextField();
         connectPage.add(textIp,1,2);
 
 
         Label userPort = new Label("User port:");
         connectPage.add(userPort,0,4);
 
-        final ComboBox portComboBox = new ComboBox();
+        portComboBox = new ComboBox();
         portComboBox.getItems().addAll(
-                "13131",
-                "13132",
-                "13133",
-                "13134",
-                "13135"
+                13131,
+                13132,
+                13133,
+                13134,
+                13135
         );
 
 
-        portComboBox.setValue("13131");
+        portComboBox.setValue(13131);
 
 
         connectPage.add(portComboBox,1,4);
@@ -350,6 +372,24 @@ public class MainView{
         friendPage.getChildren().addAll(enemyBattlefield);
         friendPage.setAlignment(Pos.CENTER);
 
+        dialog = new Stage();
+        attackButton = new Button("Attack");
+        exit = new Button("Back");
+
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+        dialogHbox = new HBox(20);
+
+        dialogHbox.setAlignment(Pos.CENTER);
+
+        attackButton.setMinWidth(70);
+        exit.setMinWidth(70);
+        dialogHbox.getChildren().addAll(attackButton,exit);
+
+        dialog.initStyle(StageStyle.UNDECORATED);
+        Scene dialogScene = new Scene(dialogHbox, 300, 100);
+        dialog.setScene(dialogScene);
+
         screen.getChildren().addAll(statusBar,zone);
 
         root.getChildren().addAll(screen);
@@ -363,6 +403,7 @@ public class MainView{
     }
 
     public void show(Stage stage){
+        primaryStage = stage;
         stage.setTitle("asda");
         stage.setScene(preloaderScene);
         stage.show();
@@ -529,6 +570,22 @@ public class MainView{
         userPage.getChildren().addAll(battlefield);
 
         zone.getChildren().addAll(friendPage,userPage);
+    }
+
+    public void attack(double sceneX,double sceneY){
+
+        dialog.setX(sceneX + 220);
+        dialog.setY(sceneY + 45);
+        dialog.show();
+
+    }
+
+    public void backToBattle(){
+        dialog.close();
+    }
+
+    public void sendAttack(){
+
     }
 
 

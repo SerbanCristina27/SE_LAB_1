@@ -35,6 +35,10 @@ public class ClientController implements Runnable {
 
         try {
             FriendModel.clientSocket = new Socket(serverAddress,serverPort);
+            BufferedReader input =
+                    new BufferedReader(new InputStreamReader(FriendModel.clientSocket.getInputStream()));
+            String answer = input.readLine();
+            JOptionPane.showMessageDialog(null, answer);
         } catch (IOException e) {
             e.printStackTrace();
         }

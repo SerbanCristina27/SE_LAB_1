@@ -56,6 +56,14 @@ public class UserController {
         mainView.connectBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+
+                String ipAddress = mainView.getTextIp();
+                Integer portNumber = mainView.getPortComboBox();
+
+                ClientController client = new ClientController(ipAddress,portNumber);
+
+                new Thread(client).start();
+
                 mainView.switchToBattle();
             }
         });
@@ -66,6 +74,31 @@ public class UserController {
                 mainView.switchToBattle();
             }
         });
+
+        mainView.attackButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+            }
+        });
+
+        mainView.exit.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                mainView.backToBattle();
+            }
+        });
+
+        for(int y = 0; y < Constants.SIZE * Constants.SIZE; y++) {
+            mainView.getEnemyBattlefield().getChildren().get(y).setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    double sceneX = event.getSceneX();
+                    double sceneY = event.getSceneY();
+                    mainView.attack(sceneX,sceneY);
+                }
+            });
+        }
 
     }
 
@@ -141,13 +174,6 @@ public class UserController {
         }
     }
 
-    public boolean connectToFriend(String ip, Integer port){
-
-        //clientController = new ClientController(ip,port);
-
-
-        return false;
-    }
 
     public void updateUserBattlefield(Integer columnIndex,Integer rowIndex){
         mainView.updateUserBattlefield(columnIndex,rowIndex,userModel.getPosition());
